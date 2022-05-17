@@ -1,7 +1,10 @@
 package com.example.webfluxtest.controller;
 
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,9 +30,12 @@ public class TestController {
     @Qualifier("httpClient2")
     private final HttpClient httpClient2;
 
+    @Value("${test.host}")
+    private String testHost;
+
     @GetMapping(value = "/webflux-webclient-test")
     public Mono<String> getTestUsingWebfluxWebclient(@RequestParam long delay) {
-        return webClient.get().uri("http://192.168.0.59:8080/v1/get-test-string-1?delay={delay}", delay)
+        return webClient.get().uri(testHost+"/v1/get-test-string-1?delay={delay}", delay)
                 .retrieve()
                 .bodyToMono(String.class);
     }
@@ -38,7 +44,7 @@ public class TestController {
     public String getTestUsingHttpClient(@RequestParam long delay) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
-                .uri(URI.create(String.format("http://192.168.0.59:8080/v1/get-test-string-2?delay=%d", delay)))
+                .uri(URI.create(String.format(testHost+"/v1/get-test-string-2?delay=%d", delay)))
                 .build();
 
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
@@ -50,7 +56,7 @@ public class TestController {
     public CompletableFuture<String> getTestAsyncUsingHttpClient(@RequestParam long delay) {
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
-                .uri(URI.create(String.format("http://192.168.0.59:8080/v1/get-test-string-2?delay=%d", delay)))
+                .uri(URI.create(String.format(testHost+"/v1/get-test-string-2?delay=%d", delay)))
                 .build();
 
         return httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
@@ -61,7 +67,7 @@ public class TestController {
     public String getTestUsingHttpClient2(@RequestParam long delay) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
-                .uri(URI.create(String.format("http://192.168.0.59:8080/v1/get-test-string-2?delay=%d", delay)))
+                .uri(URI.create(String.format(testHost+"/v1/get-test-string-2?delay=%d", delay)))
                 .build();
 
         HttpResponse<String> response = httpClient2.send(request, HttpResponse.BodyHandlers.ofString());
@@ -73,7 +79,7 @@ public class TestController {
     public CompletableFuture<String> getTestAsyncUsingHttpClient2(@RequestParam long delay) {
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
-                .uri(URI.create(String.format("http://192.168.0.59:8080/v1/get-test-string-2?delay=%d", delay)))
+                .uri(URI.create(String.format(testHost+"/v1/get-test-string-2?delay=%d", delay)))
                 .build();
 
         return httpClient2.sendAsync(request, HttpResponse.BodyHandlers.ofString())
