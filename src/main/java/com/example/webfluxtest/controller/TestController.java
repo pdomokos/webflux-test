@@ -35,7 +35,7 @@ public class TestController {
 
     @GetMapping(value = "/webflux-webclient-test")
     public Mono<String> getTestUsingWebfluxWebclient(@RequestParam long delay) {
-        return webClient.get().uri(testHost+"/v1/get-test-string-1?delay={delay}", delay)
+        return webClient.get().uri("/get-test-string-1?delay={delay}", delay)
                 .retrieve()
                 .bodyToMono(String.class);
     }
