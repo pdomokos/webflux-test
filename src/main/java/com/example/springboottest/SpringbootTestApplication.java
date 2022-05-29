@@ -1,13 +1,13 @@
-package com.example.webfluxtest;
+package com.example.springboottest;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class WebfluxTestApplication {
+public class SpringbootTestApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(WebfluxTestApplication.class, args);
+        SpringApplication.run(SpringbootTestApplication.class, args);
     }
 
 }
